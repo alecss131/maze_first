@@ -1,0 +1,11 @@
+.idea/
+.vs/
+.git/
+Binaries/
+Build/
+DerivedDataCache/
+Intermediate/
+Saved/
+WindowsNoEditor/
+*.sln
+*.bat
