@@ -14,9 +14,23 @@ AMazeRunner::AMazeRunner()
 	CameraComponent->bUsePawnControlRotation = true;
 }
 
+void AMazeRunner::ShowHelp()
+{
+    bHelpVisible ^= true;
+    ShowHelpPath.Broadcast(bHelpVisible);
+}
+
+void AMazeRunner::GenerateMaze()
+{
+    GenerateNewMaze.Broadcast();
+    SetActorLocationAndRotation(InitialPosition, FRotator::ZeroRotator);
+    bHelpVisible = false;
+}
+
 void AMazeRunner::BeginPlay()
 {
 	Super::BeginPlay();
+    InitialPosition = GetActorLocation();
 }
 
 void AMazeRunner::Tick(float DeltaTime)
@@ -31,6 +45,9 @@ void AMazeRunner::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMazeRunner::MoveRight);
 	PlayerInputComponent->BindAxis("LookTurn", this, &AMazeRunner::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &AMazeRunner::AddControllerPitchInput);
+    PlayerInputComponent->BindAction("ShowHelp", IE_Pressed, this, &AMazeRunner::ShowHelp);
+    PlayerInputComponent->BindAction("GenerateNewMaze", IE_Pressed, this, &AMazeRunner::GenerateMaze);
+    
 }
 
 void AMazeRunner::MoveForward(float Axis)

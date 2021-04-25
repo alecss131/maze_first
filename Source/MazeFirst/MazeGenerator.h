@@ -12,13 +12,15 @@ class USceneComponent;
 class UInstancedStaticMeshComponent;
 class UStaticMeshComponent;
 class USplineComponent;
+class UNiagaraComponent;
 struct FCell;
 
 UCLASS()
 class MAZEFIRST_API AMazeGenerator : public AActor
 {
 	GENERATED_BODY()
-    
+
+protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USceneComponent* SceneComponent;
 
@@ -37,8 +39,14 @@ class MAZEFIRST_API AMazeGenerator : public AActor
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UStaticMeshComponent* EndComponent;
 
-    UPROPERTY(VisibleAnywhere, Category = "Components")
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
     USplineComponent* SplineComponent;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+    UNiagaraComponent * Path;
+
+    UPROPERTY(EditAnywhere, Category = "Parameters")
+    FName SplineName = "spline_path";
 	
 	UPROPERTY(EditAnywhere, Category = "Parameters", meta = (ClampMin = "0.0"))
 	float CellSize = 400.0f;
@@ -54,19 +62,21 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void GenerateMaze();
-
+    
 protected:
 	virtual void BeginPlay() override;
 
 private :
 	void RemoveWallsWithBackTracker(FCell **Cells);
 	void RemoveWall(FCell *A, FCell *B);
-	FIntVector PlaceExit(FCell **Cells);
-	void BuildGeometry(FCell **Cells, FIntVector Exit);
+	void PlaceExit(FCell **Cells);
+	void BuildGeometry(FCell **Cells);
 	void PlaceColumn(const float X, const float Y);
 	void PlaceFloor(const float X, const float Y);
     void AddPoint(const uint8 X, const uint8 Y);
 	void PlaceWall(const float X, const float Y, const float R);
     void FindPath(FCell **Cells);
+    void ShowPath(bool Show);
     FIntVector End;
+    FIntVector Exit;
 };

@@ -1,9 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MazeGenerator.h"
+#include "MazeRunner.h"
 #include "Components/SceneComponent.h"
 #include "Components/InstancedStaticMeshComponent.h"
 #include "Components/SplineComponent.h"
+#include "NiagaraComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogMazeGenerator, All, All)
 
@@ -36,21 +39,34 @@ AMazeGenerator::AMazeGenerator()
 	EndComponent->SetupAttachment(RootComponent);
     SplineComponent = CreateDefaultSubobject<USplineComponent>(TEXT("SplineComponent"));
     SplineComponent->SetupAttachment(RootComponent);
+    Path = CreateDefaultSubobject<UNiagaraComponent>(TEXT("PathEffect"));
+    Path->SetupAttachment(RootComponent);
 }
 
 void AMazeGenerator::BeginPlay()
 {
-	Super::BeginPlay();
+    Super::BeginPlay();
+    const auto Player = Cast<AMazeRunner>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
+    if (Player)
+    {
+        Player->ShowHelpPath.AddUObject(this, &AMazeGenerator::ShowPath);
+        Player->GenerateNewMaze.AddUObject(this, &AMazeGenerator::GenerateMaze);
+    }
     checkf(WallComponent->GetStaticMesh(), TEXT("Mesh element must be set"));
     checkf(FloorComponent->GetStaticMesh(), TEXT("Mesh element must be set"));
     checkf(ColumnComponent->GetStaticMesh(), TEXT("Mesh element must be set"));
     checkf(StartComponent->GetStaticMesh(), TEXT("Mesh element must be set"));
     checkf(EndComponent->GetStaticMesh(), TEXT("Mesh element must be set"));
-	GenerateMaze();
+    GenerateMaze();
+    check(Path);
+    Path->SetActorParameter(SplineName, this);
+    Path->SetVisibility(false);
+    Path->SetPaused(false);
 }
 
 void AMazeGenerator::GenerateMaze()
 {
+    ShowPath(false);
     WallComponent->ClearInstances();
     FloorComponent->ClearInstances();
     ColumnComponent->ClearInstances();
@@ -65,8 +81,8 @@ void AMazeGenerator::GenerateMaze()
 		}
 	}
 	RemoveWallsWithBackTracker(Cells);
-	const auto Exit = PlaceExit(Cells);
-	BuildGeometry(Cells, Exit);
+	PlaceExit(Cells);
+	BuildGeometry(Cells);
     FindPath(Cells);
 	for (uint8 i = 0; i < Width; i++)
 	{
@@ -140,7 +156,7 @@ void AMazeGenerator::RemoveWall(FCell* A, FCell* B)
 	}
 }
 
-FIntVector AMazeGenerator::PlaceExit(FCell** Cells)
+void AMazeGenerator::PlaceExit(FCell** Cells)
 {
     Cells[0][0].bHasBottom = false; //open start
 	FCell *Furthest = &Cells[0][0];
@@ -185,10 +201,10 @@ FIntVector AMazeGenerator::PlaceExit(FCell** Cells)
 	}
 	EndComponent->SetRelativeLocation(FVector(CellSize * Y, CellSize * X, 0.0f));
 	EndComponent->SetRelativeRotation(FRotator(0.0f, 90.0f * R, 0.0f));
-    return FIntVector(X, Y, 0);
+    Exit =  FIntVector(X, Y, 0);
 }
 
-void AMazeGenerator::BuildGeometry(FCell** Cells, FIntVector Exit)
+void AMazeGenerator::BuildGeometry(FCell** Cells)
 {
 	for(uint8 i = 0; i < Width; i++)
 	{
@@ -277,4 +293,11 @@ void AMazeGenerator::FindPath(FCell** Cells)
         }
         AddPoint(Current.X, Current.Y);
     }
+}
+
+void AMazeGenerator::ShowPath(bool Show)
+{
+    Path->SetVisibility(Show, true);
+    Path->SetPaused(!Show);
+    UE_LOG(LogMazeGenerator, Display, TEXT("Changed visibility: %d"), Show);
 }
