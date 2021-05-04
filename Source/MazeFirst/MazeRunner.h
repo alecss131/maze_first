@@ -8,8 +8,7 @@
 
 class UCameraComponent;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnShowHelpPath, bool)
-DECLARE_MULTICAST_DELEGATE(FOnGenerateNewMaze)
+
 
 UCLASS()
 class MAZEFIRST_API AMazeRunner : public ACharacter
@@ -18,15 +17,11 @@ class MAZEFIRST_API AMazeRunner : public ACharacter
 
 public:
 	AMazeRunner();
-    
-    FOnShowHelpPath ShowHelpPath;
-    FOnGenerateNewMaze GenerateNewMaze;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UCameraComponent* CameraComponent;
 private:
     bool bHelpVisible = false;
-    FVector InitialPosition;
     
     void ShowHelp();
     void GenerateMaze();

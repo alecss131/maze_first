@@ -1,8 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MazeRunner.h"
+#include "MazeFirstGameModeBase.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AMazeRunner::AMazeRunner()
 {
@@ -17,20 +19,27 @@ AMazeRunner::AMazeRunner()
 void AMazeRunner::ShowHelp()
 {
     bHelpVisible ^= true;
-    ShowHelpPath.Broadcast(bHelpVisible);
+    const auto GameMode = Cast<AMazeFirstGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+    if (GameMode)
+    {
+        GameMode->ShowHelpPath.Broadcast(bHelpVisible);
+    }
 }
 
 void AMazeRunner::GenerateMaze()
 {
-    GenerateNewMaze.Broadcast();
-    SetActorLocationAndRotation(InitialPosition, FRotator::ZeroRotator);
+    const auto GameMode = Cast<AMazeFirstGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+    if (GameMode)
+    {
+        GameMode->GenerateNewMaze.Broadcast();
+        GameMode->ResetPlayer(GetController());
+    }
     bHelpVisible = false;
 }
 
 void AMazeRunner::BeginPlay()
 {
 	Super::BeginPlay();
-    InitialPosition = GetActorLocation();
 }
 
 void AMazeRunner::Tick(float DeltaTime)

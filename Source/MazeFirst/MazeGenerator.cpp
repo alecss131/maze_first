@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MazeGenerator.h"
-#include "MazeRunner.h"
+#include "MazeFirstGameModeBase.h"
 #include "Components/SceneComponent.h"
 #include "Components/InstancedStaticMeshComponent.h"
 #include "Components/SplineComponent.h"
@@ -46,11 +46,11 @@ AMazeGenerator::AMazeGenerator()
 void AMazeGenerator::BeginPlay()
 {
     Super::BeginPlay();
-    const auto Player = Cast<AMazeRunner>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
-    if (Player)
+    const auto GameMode = Cast<AMazeFirstGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+    if (GameMode)
     {
-        Player->ShowHelpPath.AddUObject(this, &AMazeGenerator::ShowPath);
-        Player->GenerateNewMaze.AddUObject(this, &AMazeGenerator::GenerateMaze);
+        GameMode->ShowHelpPath.AddUObject(this, &AMazeGenerator::ShowPath);
+        GameMode->GenerateNewMaze.AddUObject(this, &AMazeGenerator::GenerateMaze);
     }
     checkf(WallComponent->GetStaticMesh(), TEXT("Mesh element must be set"));
     checkf(FloorComponent->GetStaticMesh(), TEXT("Mesh element must be set"));

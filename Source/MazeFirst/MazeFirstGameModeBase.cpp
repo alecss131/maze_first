@@ -17,3 +17,12 @@ AMazeFirstGameModeBase::AMazeFirstGameModeBase()
 		Settings->ApplySettings(false);
 	}
 }
+
+void AMazeFirstGameModeBase::ResetPlayer(AController* Controller)
+{
+    if (Controller && Controller->GetPawn())
+    {
+        Controller->GetPawn()->Reset();
+    }
+    RestartPlayer(Controller);
+}
