@@ -8,7 +8,7 @@
 #include "NiagaraComponent.h"
 #include "Kismet/GameplayStatics.h"
 
-DEFINE_LOG_CATEGORY_STATIC(LogMazeGenerator, All, All)
+DECLARE_LOG_CATEGORY_CLASS(LogMazeGenerator, All, All)
 
 struct FCell
 {
