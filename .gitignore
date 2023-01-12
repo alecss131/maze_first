@@ -8,6 +8,7 @@
 /Plugins/
 /Saved/
 /WindowsNoEditor/
+/Windows/
 .vsconfig
 *.sln
 *.bat
