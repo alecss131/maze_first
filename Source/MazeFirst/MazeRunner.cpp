@@ -8,19 +8,18 @@
 
 AMazeRunner::AMazeRunner()
 {
-	PrimaryActorTick.bCanEverTick = true;
-	GetCapsuleComponent()->InitCapsuleSize(35.0f, 90.0f);
-	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
-	CameraComponent->SetupAttachment(GetCapsuleComponent());
-	CameraComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 64.0f));
-	CameraComponent->bUsePawnControlRotation = true;
+    PrimaryActorTick.bCanEverTick = false;
+    GetCapsuleComponent()->InitCapsuleSize(35.0f, 90.0f);
+    CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
+    CameraComponent->SetupAttachment(GetCapsuleComponent());
+    CameraComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 64.0f));
+    CameraComponent->bUsePawnControlRotation = true;
 }
 
 void AMazeRunner::ShowHelp()
 {
     bHelpVisible ^= true;
-    const auto GameMode = Cast<AMazeFirstGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
-    if (GameMode)
+    if (const auto GameMode = Cast<AMazeFirstGameModeBase>(UGameplayStatics::GetGameMode(GetWorld())))
     {
         GameMode->ShowHelpPath.Broadcast(bHelpVisible);
     }
@@ -28,8 +27,7 @@ void AMazeRunner::ShowHelp()
 
 void AMazeRunner::GenerateMaze()
 {
-    const auto GameMode = Cast<AMazeFirstGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
-    if (GameMode)
+    if (const auto GameMode = Cast<AMazeFirstGameModeBase>(UGameplayStatics::GetGameMode(GetWorld())))
     {
         GameMode->GenerateNewMaze.Broadcast();
         GameMode->ResetPlayer(GetController());
@@ -37,34 +35,24 @@ void AMazeRunner::GenerateMaze()
     bHelpVisible = false;
 }
 
-void AMazeRunner::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
-void AMazeRunner::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
 void AMazeRunner::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	PlayerInputComponent->BindAxis("MoveForward", this, &AMazeRunner::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &AMazeRunner::MoveRight);
-	PlayerInputComponent->BindAxis("LookTurn", this, &AMazeRunner::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("LookUp", this, &AMazeRunner::AddControllerPitchInput);
+    Super::SetupPlayerInputComponent(PlayerInputComponent);
+    PlayerInputComponent->BindAxis("MoveForward", this, &AMazeRunner::MoveForward);
+    PlayerInputComponent->BindAxis("MoveRight", this, &AMazeRunner::MoveRight);
+    PlayerInputComponent->BindAxis("LookTurn", this, &AMazeRunner::AddControllerYawInput);
+    PlayerInputComponent->BindAxis("LookUp", this, &AMazeRunner::AddControllerPitchInput);
     PlayerInputComponent->BindAction("ShowHelp", IE_Pressed, this, &AMazeRunner::ShowHelp);
     PlayerInputComponent->BindAction("GenerateNewMaze", IE_Pressed, this, &AMazeRunner::GenerateMaze);
-    
+
 }
 
 void AMazeRunner::MoveForward(float Axis)
 {
-	AddMovementInput(GetActorForwardVector(), Axis);
+    AddMovementInput(GetActorForwardVector(), Axis);
 }
 
 void AMazeRunner::MoveRight(float Axis)
 {
-	AddMovementInput(GetActorRightVector(), Axis);
+    AddMovementInput(GetActorRightVector(), Axis);
 }

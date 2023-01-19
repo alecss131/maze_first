@@ -12,10 +12,11 @@ DECLARE_MULTICAST_DELEGATE(FOnGenerateNewMaze)
 UCLASS()
 class MAZEFIRST_API AMazeFirstGameModeBase : public AGameModeBase
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
+
 public:
-	AMazeFirstGameModeBase();
-    void ResetPlayer(AController * Controller);
+    AMazeFirstGameModeBase();
+    void ResetPlayer(AController* Controller);
 
     FOnShowHelpPath ShowHelpPath;
     FOnGenerateNewMaze GenerateNewMaze;

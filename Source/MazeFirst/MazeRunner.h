@@ -7,31 +7,28 @@
 #include "MazeRunner.generated.h"
 
 class UCameraComponent;
-
+class UInputComponent;
 
 
 UCLASS()
 class MAZEFIRST_API AMazeRunner : public ACharacter
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
-	AMazeRunner();
+    AMazeRunner();
 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
-	UCameraComponent* CameraComponent;
 private:
     bool bHelpVisible = false;
-    
+
+    UPROPERTY(VisibleAnywhere, Category = "Components")
+    UCameraComponent* CameraComponent;
+
     void ShowHelp();
     void GenerateMaze();
 
-protected:
-	virtual void BeginPlay() override;
-
-public:	
-	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	void MoveForward(float Axis);
+public:
+    virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+    void MoveForward(float Axis);
     void MoveRight(float Axis);
 };
