@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "MazeFirstGameModeBase.generated.h"
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnSetPause, bool)
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnShowHelpPath, bool)
 DECLARE_MULTICAST_DELEGATE(FOnGenerateNewMaze)
 
@@ -20,4 +21,5 @@ public:
 
     FOnShowHelpPath ShowHelpPath;
     FOnGenerateNewMaze GenerateNewMaze;
+    FOnSetPause SetPause;
 };

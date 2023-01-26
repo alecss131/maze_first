@@ -1,10 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MazeRunner.h"
+
+#include "EnhancedInputSubsystems.h"
 #include "MazeFirstGameModeBase.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameFramework/GameModeBase.h"
+#include "EnhancedInputComponent.h"
 
 AMazeRunner::AMazeRunner()
 {
@@ -14,6 +18,19 @@ AMazeRunner::AMazeRunner()
     CameraComponent->SetupAttachment(GetCapsuleComponent());
     CameraComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 64.0f));
     CameraComponent->bUsePawnControlRotation = true;
+}
+
+void AMazeRunner::BeginPlay()
+{
+    Super::BeginPlay();
+    if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+    {
+        if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
+            PlayerController->GetLocalPlayer()))
+        {
+            Subsystem->AddMappingContext(MappingContext, 0);
+        }
+    }
 }
 
 void AMazeRunner::ShowHelp()
@@ -37,22 +54,40 @@ void AMazeRunner::GenerateMaze()
 
 void AMazeRunner::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-    Super::SetupPlayerInputComponent(PlayerInputComponent);
-    PlayerInputComponent->BindAxis("MoveForward", this, &AMazeRunner::MoveForward);
-    PlayerInputComponent->BindAxis("MoveRight", this, &AMazeRunner::MoveRight);
-    PlayerInputComponent->BindAxis("LookTurn", this, &AMazeRunner::AddControllerYawInput);
-    PlayerInputComponent->BindAxis("LookUp", this, &AMazeRunner::AddControllerPitchInput);
-    PlayerInputComponent->BindAction("ShowHelp", IE_Pressed, this, &AMazeRunner::ShowHelp);
-    PlayerInputComponent->BindAction("GenerateNewMaze", IE_Pressed, this, &AMazeRunner::GenerateMaze);
-
+    if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+    {
+        EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMazeRunner::Move);
+        EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMazeRunner::Look);
+        EnhancedInputComponent->BindAction(HelpAction, ETriggerEvent::Triggered, this, &AMazeRunner::ShowHelp);
+        EnhancedInputComponent->BindAction(GenerateNewMazeAction, ETriggerEvent::Triggered, this, &AMazeRunner::GenerateMaze);
+        EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Triggered, this, &AMazeRunner::PauseGame);
+    }
 }
 
-void AMazeRunner::MoveForward(float Axis)
+void AMazeRunner::PauseGame()
 {
-    AddMovementInput(GetActorForwardVector(), Axis);
+    if (const auto GameMode = Cast<AMazeFirstGameModeBase>(UGameplayStatics::GetGameMode(GetWorld())))
+    {
+        GameMode->SetPause.Broadcast(true);
+    }
 }
 
-void AMazeRunner::MoveRight(float Axis)
+void AMazeRunner::Move(const FInputActionValue& Value)
 {
-    AddMovementInput(GetActorRightVector(), Axis);
+    FVector2D MovementVector = Value.Get<FVector2D>();
+    if (Controller)
+    {
+        AddMovementInput(GetActorForwardVector(), MovementVector.Y);
+        AddMovementInput(GetActorRightVector(), MovementVector.X);
+    }
+}
+
+void AMazeRunner::Look(const FInputActionValue& Value)
+{
+    FVector2D LookAxisVector = Value.Get<FVector2D>();
+    if (Controller != nullptr)
+    {
+        AddControllerYawInput(LookAxisVector.X);
+        AddControllerPitchInput(LookAxisVector.Y);
+    }
 }

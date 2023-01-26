@@ -8,7 +8,9 @@
 
 class UCameraComponent;
 class UInputComponent;
-
+struct FInputActionValue;
+class UInputAction;
+class UInputMappingContext;
 
 UCLASS()
 class MAZEFIRST_API AMazeRunner : public ACharacter
@@ -17,6 +19,8 @@ class MAZEFIRST_API AMazeRunner : public ACharacter
 
 public:
     AMazeRunner();
+    virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+    virtual void BeginPlay() override;
 
 private:
     bool bHelpVisible = false;
@@ -26,9 +30,27 @@ private:
 
     void ShowHelp();
     void GenerateMaze();
+    void PauseGame();
 
-public:
-    virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
-    void MoveForward(float Axis);
-    void MoveRight(float Axis);
+    void Move(const FInputActionValue& Value);
+    void Look(const FInputActionValue& Value);
+
+protected:
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputMappingContext* MappingContext;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputAction* MoveAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputAction* LookAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputAction* HelpAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputAction* GenerateNewMazeAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputAction* PauseAction;
 };
