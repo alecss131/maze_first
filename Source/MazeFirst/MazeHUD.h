@@ -11,7 +11,7 @@ class UUserWidget;
 UCLASS()
 class MAZEFIRST_API AMazeHUD : public AHUD
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 protected:
     virtual void BeginPlay() override;
@@ -21,13 +21,13 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = UI)
     TSubclassOf<UUserWidget> HudWidgetClass;
-    
+
 private:
     UPROPERTY()
-    UUserWidget *PauseWidget;
+    UUserWidget* PauseWidget;
 
     UPROPERTY()
-    UUserWidget *HudWidget;
+    UUserWidget* HudWidget;
 
     UFUNCTION()
     void OnSetPause(bool Paused);

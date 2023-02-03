@@ -2,11 +2,16 @@
 
 #include "MazeFirstGameModeBase.h"
 #include "MazeRunner.h"
+#include "Engine/Engine.h"
 #include "GameFramework/GameUserSettings.h"
+#include "MazeHUD.h"
+#include "MazeRunnerController.h"
 
 AMazeFirstGameModeBase::AMazeFirstGameModeBase()
 {
     DefaultPawnClass = AMazeRunner::StaticClass();
+    HUDClass = AMazeHUD::StaticClass();
+    PlayerControllerClass = AMazeRunnerController::StaticClass();
     if (GEngine)
     {
         UGameUserSettings* Settings = GEngine->GetGameUserSettings();

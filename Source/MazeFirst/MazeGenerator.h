@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
 #include "Components/SplineComponent.h"
 #include "GameFramework/Actor.h"
 #include "MazeGenerator.generated.h"

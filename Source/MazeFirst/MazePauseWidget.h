@@ -12,7 +12,7 @@ class UButton;
 UCLASS()
 class MAZEFIRST_API UMazePauseWidget : public UUserWidget
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 protected:
     virtual void NativeConstruct() override;
@@ -24,7 +24,6 @@ protected:
     UButton* ExitButton;
 
 private:
-
     UFUNCTION()
     void ResumeGame();
     UFUNCTION()

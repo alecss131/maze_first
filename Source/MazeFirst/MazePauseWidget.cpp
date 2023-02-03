@@ -2,7 +2,6 @@
 
 
 #include "MazePauseWidget.h"
-
 #include "MazeFirstGameModeBase.h"
 #include "Components/Button.h"
 #include "Kismet/KismetSystemLibrary.h"

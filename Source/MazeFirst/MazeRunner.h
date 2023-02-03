@@ -30,7 +30,6 @@ private:
 
     void ShowHelp();
     void GenerateMaze();
-    void PauseGame();
 
     void Move(const FInputActionValue& Value);
     void Look(const FInputActionValue& Value);
@@ -50,7 +49,4 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
     UInputAction* GenerateNewMazeAction;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-    UInputAction* PauseAction;
 };

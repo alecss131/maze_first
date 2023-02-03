@@ -2,18 +2,15 @@
 
 
 #include "MazeHUD.h"
-
 #include "MazeFirstGameModeBase.h"
 #include "Blueprint/UserWidget.h"
-#include "Logging/LogMacros.h"
 
 void AMazeHUD::BeginPlay()
 {
     Super::BeginPlay();
-    if(!GetWorld()) return;
+    if (!GetWorld()) return;
 
-    const auto GameMode = Cast<AMazeFirstGameModeBase>(GetWorld()->GetAuthGameMode());
-    if (GameMode)
+    if (const auto GameMode = Cast<AMazeFirstGameModeBase>(GetWorld()->GetAuthGameMode()))
     {
         GameMode->SetPause.AddUObject(this, &AMazeHUD::OnSetPause);
     }
@@ -27,7 +24,7 @@ void AMazeHUD::BeginPlay()
             PauseWidget->SetVisibility(ESlateVisibility::Hidden);
         }
     }
-    
+
     if (HudWidgetClass)
     {
         HudWidget = CreateWidget<UUserWidget>(GetWorld(), HudWidgetClass);
@@ -40,19 +37,19 @@ void AMazeHUD::BeginPlay()
 
 void AMazeHUD::OnSetPause(bool Paused)
 {
-    if (!GetWorld() || !GetWorld()->GetAuthGameMode()) return;
-    auto Controller = GetOwningPlayerController();
+    const auto Controller = GetOwningPlayerController();
     Controller->SetPause(Paused);
+    Controller->SetShowMouseCursor(Paused);
     if (Paused)
     {
         Controller->SetInputMode(FInputModeUIOnly());
-        Controller->SetShowMouseCursor(true);
+        Controller->FlushPressedKeys();
         PauseWidget->SetVisibility(ESlateVisibility::Visible);
         HudWidget->SetVisibility(ESlateVisibility::Hidden);
-    } else
+    }
+    else
     {
         Controller->SetInputMode(FInputModeGameOnly());
-        Controller->SetShowMouseCursor(false);
         PauseWidget->SetVisibility(ESlateVisibility::Hidden);
         HudWidget->SetVisibility(ESlateVisibility::Visible);
     }

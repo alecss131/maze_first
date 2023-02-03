@@ -4,7 +4,7 @@ using UnrealBuildTool;
 
 public class MazeFirstEditorTarget : TargetRules
 {
-	public MazeFirstEditorTarget( TargetInfo Target) : base(Target)
+	public MazeFirstEditorTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
