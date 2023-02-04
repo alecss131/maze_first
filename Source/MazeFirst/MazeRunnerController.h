@@ -27,6 +27,17 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
     UInputAction* PauseAction;
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputAction* HelpAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputAction* GenerateNewMazeAction;
+
 private:
     void PauseGame();
+    void ShowHelp();
+    void GenerateMaze();
+
+    UFUNCTION()
+    void OnSetPause(bool Paused);
 };

@@ -23,13 +23,8 @@ public:
     virtual void BeginPlay() override;
 
 private:
-    bool bHelpVisible = false;
-
     UPROPERTY(VisibleAnywhere, Category = "Components")
     UCameraComponent* CameraComponent;
-
-    void ShowHelp();
-    void GenerateMaze();
 
     void Move(const FInputActionValue& Value);
     void Look(const FInputActionValue& Value);
@@ -43,10 +38,4 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
     UInputAction* LookAction;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-    UInputAction* HelpAction;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-    UInputAction* GenerateNewMazeAction;
 };

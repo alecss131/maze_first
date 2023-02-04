@@ -8,8 +8,6 @@
 #include "NiagaraComponent.h"
 #include "Kismet/GameplayStatics.h"
 
-DECLARE_LOG_CATEGORY_CLASS(LogMazeGenerator, All, All)
-
 struct FCell
 {
     uint8 X;
@@ -46,6 +44,8 @@ AMazeGenerator::AMazeGenerator()
 void AMazeGenerator::BeginPlay()
 {
     Super::BeginPlay();
+    bHelpVisible = false;
+    SetShowPath(bHelpVisible);
     if (const auto GameMode = Cast<AMazeFirstGameModeBase>(UGameplayStatics::GetGameMode(GetWorld())))
     {
         GameMode->ShowHelpPath.AddUObject(this, &AMazeGenerator::ShowPath);
@@ -65,7 +65,8 @@ void AMazeGenerator::BeginPlay()
 
 void AMazeGenerator::GenerateMaze()
 {
-    ShowPath(false);
+    bHelpVisible = false;
+    SetShowPath(bHelpVisible);
     WallComponent->ClearInstances();
     FloorComponent->ClearInstances();
     ColumnComponent->ClearInstances();
@@ -281,7 +282,6 @@ void AMazeGenerator::FindPath(FCell** Cells)
 {
     FIntVector Current = End;
     AddPoint(Current.X, Current.Y);
-    UE_LOG(LogMazeGenerator, Display, TEXT("Exit: %s"), *Current.ToString());
     while (!Current.IsZero())
     {
         const auto CurrentCell = Cells[Current.X][Current.Y];
@@ -305,16 +305,20 @@ void AMazeGenerator::FindPath(FCell** Cells)
         }
         else
         {
-            UE_LOG(LogMazeGenerator, Error, TEXT("Fail find path"));
             break;
         }
         AddPoint(Current.X, Current.Y);
     }
 }
 
-void AMazeGenerator::ShowPath(bool Show)
+void AMazeGenerator::SetShowPath(bool Show)
 {
     Path->SetVisibility(Show, true);
     Path->SetPaused(!Show);
-    UE_LOG(LogMazeGenerator, Display, TEXT("Changed visibility: %d"), Show);
+}
+
+void AMazeGenerator::ShowPath()
+{
+    bHelpVisible ^= true;
+    SetShowPath(bHelpVisible);
 }

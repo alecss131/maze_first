@@ -74,7 +74,14 @@ private :
     void AddPoint(const uint8 X, const uint8 Y);
     void PlaceWall(const float X, const float Y, const float R);
     void FindPath(FCell** Cells);
-    void ShowPath(bool Show);
+    void SetShowPath(bool Show);
+
+    UFUNCTION()
+    void ShowPath();
+    
     FIntVector End;
     FIntVector Exit;
+
+    UPROPERTY()
+    bool bHelpVisible;
 };
