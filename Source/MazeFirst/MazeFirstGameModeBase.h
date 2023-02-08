@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Alexey Morozov. All Rights Reserved.
 
 #pragma once
 
@@ -9,6 +9,7 @@
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnSetPause, bool)
 DECLARE_MULTICAST_DELEGATE(FOnShowHelpPath)
 DECLARE_MULTICAST_DELEGATE(FOnGenerateNewMaze)
+DECLARE_MULTICAST_DELEGATE(FOnRestartMaze)
 
 UCLASS()
 class MAZEFIRST_API AMazeFirstGameModeBase : public AGameModeBase
@@ -17,9 +18,9 @@ class MAZEFIRST_API AMazeFirstGameModeBase : public AGameModeBase
 
 public:
     AMazeFirstGameModeBase();
-    void ResetPlayer(AController* Controller);
 
     FOnShowHelpPath ShowHelpPath;
     FOnGenerateNewMaze GenerateNewMaze;
     FOnSetPause SetPause;
+    FOnRestartMaze RestartMaze;
 };

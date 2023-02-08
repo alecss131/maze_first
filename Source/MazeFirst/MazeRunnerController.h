@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Alexey Morozov. All Rights Reserved.
 
 #pragma once
 
@@ -30,14 +30,13 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
     UInputAction* HelpAction;
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-    UInputAction* GenerateNewMazeAction;
-
 private:
     void PauseGame();
     void ShowHelp();
-    void GenerateMaze();
 
     UFUNCTION()
-    void OnSetPause(bool Paused);
+    void OnSetPause(bool bPaused);
+
+    UFUNCTION()
+    void ResetPlayer();
 };

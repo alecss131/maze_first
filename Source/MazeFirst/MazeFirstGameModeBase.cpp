@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Alexey Morozov. All Rights Reserved.
 
 #include "MazeFirstGameModeBase.h"
 #include "MazeRunner.h"
@@ -20,13 +20,4 @@ AMazeFirstGameModeBase::AMazeFirstGameModeBase()
         Settings->SetFullscreenMode(EWindowMode::Windowed);
         Settings->ApplySettings(false);
     }
-}
-
-void AMazeFirstGameModeBase::ResetPlayer(AController* Controller)
-{
-    if (Controller && Controller->GetPawn())
-    {
-        Controller->GetPawn()->Reset();
-    }
-    RestartPlayer(Controller);
 }

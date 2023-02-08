@@ -1,8 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Alexey Morozov. All Rights Reserved.
 
 #include "MazeRunner.h"
 #include "EnhancedInputSubsystems.h"
-#include "MazeFirstGameModeBase.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -25,8 +24,7 @@ void AMazeRunner::BeginPlay()
     Super::BeginPlay();
     if (const auto PlayerController = Cast<APlayerController>(Controller))
     {
-        if (const auto Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
-            PlayerController->GetLocalPlayer()))
+        if (const auto Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
         {
             Subsystem->AddMappingContext(MappingContext, 0);
         }

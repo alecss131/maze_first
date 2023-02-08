@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Alexey Morozov. All Rights Reserved.
 
 #pragma once
 

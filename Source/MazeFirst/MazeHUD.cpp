@@ -1,5 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+// Copyright Alexey Morozov. All Rights Reserved.
 
 #include "MazeHUD.h"
 #include "MazeFirstGameModeBase.h"
@@ -8,8 +7,7 @@
 void AMazeHUD::BeginPlay()
 {
     Super::BeginPlay();
-    if (!GetWorld()) return;
-    if (const auto GameMode = Cast<AMazeFirstGameModeBase>(GetWorld()->GetAuthGameMode()))
+    if (const auto World = GetWorld(); const auto GameMode = Cast<AMazeFirstGameModeBase>(World->GetAuthGameMode()))
     {
         GameMode->SetPause.AddUObject(this, &AMazeHUD::OnSetPause);
     }
@@ -32,9 +30,9 @@ void AMazeHUD::BeginPlay()
     }
 }
 
-void AMazeHUD::OnSetPause(bool Paused)
+void AMazeHUD::OnSetPause(bool bPaused)
 {
-    if (Paused)
+    if (bPaused)
     {
         PauseWidget->SetVisibility(ESlateVisibility::Visible);
         HudWidget->SetVisibility(ESlateVisibility::Hidden);

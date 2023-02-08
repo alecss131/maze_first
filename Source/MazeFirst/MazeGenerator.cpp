@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Alexey Morozov. All Rights Reserved.
 
 #include "MazeGenerator.h"
 #include "MazeFirstGameModeBase.h"
@@ -44,12 +44,11 @@ AMazeGenerator::AMazeGenerator()
 void AMazeGenerator::BeginPlay()
 {
     Super::BeginPlay();
-    bHelpVisible = false;
-    SetShowPath(bHelpVisible);
-    if (const auto GameMode = Cast<AMazeFirstGameModeBase>(UGameplayStatics::GetGameMode(GetWorld())))
+    if (const auto World = GetWorld(); const auto GameMode = Cast<AMazeFirstGameModeBase>(UGameplayStatics::GetGameMode(World)))
     {
         GameMode->ShowHelpPath.AddUObject(this, &AMazeGenerator::ShowPath);
         GameMode->GenerateNewMaze.AddUObject(this, &AMazeGenerator::GenerateMaze);
+        GameMode->RestartMaze.AddUObject(this, &AMazeGenerator::HidePath);
     }
     checkf(WallComponent->GetStaticMesh(), TEXT("Mesh element must be set"));
     checkf(FloorComponent->GetStaticMesh(), TEXT("Mesh element must be set"));
@@ -59,18 +58,11 @@ void AMazeGenerator::BeginPlay()
     GenerateMaze();
     check(Path);
     Path->SetActorParameter(SplineName, this);
-    Path->SetVisibility(false);
-    Path->SetPaused(false);
 }
 
 void AMazeGenerator::GenerateMaze()
 {
-    bHelpVisible = false;
-    SetShowPath(bHelpVisible);
-    WallComponent->ClearInstances();
-    FloorComponent->ClearInstances();
-    ColumnComponent->ClearInstances();
-    SplineComponent->ClearSplinePoints();
+    ResetMaze();
     FCell** Cells = new FCell*[Width];
     for (uint8 i = 0; i < Width; i++)
     {
@@ -311,14 +303,28 @@ void AMazeGenerator::FindPath(FCell** Cells)
     }
 }
 
-void AMazeGenerator::SetShowPath(bool Show)
+void AMazeGenerator::SetShowPath(bool bShow)
 {
-    Path->SetVisibility(Show, true);
-    Path->SetPaused(!Show);
+    Path->SetVisibility(bShow, true);
+    Path->SetPaused(!bShow);
+}
+
+void AMazeGenerator::ResetMaze()
+{
+    HidePath();
+    WallComponent->ClearInstances();
+    FloorComponent->ClearInstances();
+    ColumnComponent->ClearInstances();
+    SplineComponent->ClearSplinePoints();
 }
 
 void AMazeGenerator::ShowPath()
 {
-    bHelpVisible ^= true;
-    SetShowPath(bHelpVisible);
+    const bool bShow = !Path->IsVisible();
+    SetShowPath(bShow);
+}
+
+void AMazeGenerator::HidePath()
+{
+    SetShowPath(false);
 }

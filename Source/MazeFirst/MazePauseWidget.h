@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Alexey Morozov. All Rights Reserved.
 
 #pragma once
 
@@ -7,7 +7,6 @@
 #include "MazePauseWidget.generated.h"
 
 class UButton;
-
 
 UCLASS()
 class MAZEFIRST_API UMazePauseWidget : public UUserWidget
@@ -23,9 +22,22 @@ protected:
     UPROPERTY(meta = (BindWidget))
     UButton* ExitButton;
 
+    UPROPERTY(meta = (BindWidget))
+    UButton* RestartButton;
+
+    UPROPERTY(meta = (BindWidget))
+    UButton* NewMazeButton;
+
 private:
     UFUNCTION()
     void ResumeGame();
+
     UFUNCTION()
     void ExitGame();
+
+    UFUNCTION()
+    void RestartMaze();
+
+    UFUNCTION()
+    void NewMaze();
 };

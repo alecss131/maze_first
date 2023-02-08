@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Alexey Morozov. All Rights Reserved.
 
 #pragma once
 
@@ -52,17 +52,17 @@ class MAZEFIRST_API AMazeGenerator : public AActor
 public:
     AMazeGenerator();
 
-    UFUNCTION(BlueprintCallable)
-    void GenerateMaze();
-
 protected:
-    virtual void BeginPlay() override;
-
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
     USplineComponent* SplineComponent;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
     UNiagaraComponent* Path;
+
+    UFUNCTION(BlueprintCallable)
+    void GenerateMaze();
+
+    virtual void BeginPlay() override;
 
 private :
     void RemoveWallsWithBackTracker(FCell** Cells);
@@ -74,14 +74,15 @@ private :
     void AddPoint(const uint8 X, const uint8 Y);
     void PlaceWall(const float X, const float Y, const float R);
     void FindPath(FCell** Cells);
-    void SetShowPath(bool Show);
+    void SetShowPath(bool bShow);
+    void ResetMaze();
 
     UFUNCTION()
     void ShowPath();
-    
+
+    UFUNCTION()
+    void HidePath();
+
     FIntVector End;
     FIntVector Exit;
-
-    UPROPERTY()
-    bool bHelpVisible;
 };

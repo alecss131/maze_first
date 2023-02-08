@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Alexey Morozov. All Rights Reserved.
 
 #pragma once
 
@@ -30,5 +30,5 @@ private:
     UUserWidget* HudWidget;
 
     UFUNCTION()
-    void OnSetPause(bool Paused);
+    void OnSetPause(bool bPaused);
 };

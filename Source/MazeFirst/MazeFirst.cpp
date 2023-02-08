@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Alexey Morozov. All Rights Reserved.
 
 #include "MazeFirst.h"
 #include "Modules/ModuleManager.h"
