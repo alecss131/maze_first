@@ -10,7 +10,8 @@
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
 				"Niagara",
-				"Engine"
+				"Engine",
+				"UMG"
 			]
 		}
 	],

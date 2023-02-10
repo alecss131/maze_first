@@ -7,6 +7,7 @@
 
 void UMazePauseWidget::NativeConstruct()
 {
+    Super::NativeConstruct();
     if (ResumeButton)
     {
         ResumeButton->OnClicked.AddDynamic(this, &UMazePauseWidget::ResumeGame);

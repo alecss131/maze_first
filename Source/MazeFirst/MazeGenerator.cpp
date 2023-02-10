@@ -218,15 +218,15 @@ void AMazeGenerator::BuildGeometry(FCell** Cells)
     {
         for (uint8 j = 0; j < Height; j++)
         {
-            PlaceColumn(CellSize * j, CellSize * i);
-            PlaceFloor(CellSize * j, CellSize * i);
+            PlaceColumn(j, i);
+            PlaceFloor(j, i);
             if (Cells[i][j].bHasLeft)
             {
-                PlaceWall(CellSize * j, CellSize * i, -90.0f);
+                PlaceWall(j, i, -90.0f);
             }
             if (Cells[i][j].bHasBottom)
             {
-                PlaceWall(CellSize * j, CellSize * i, 0.0f);
+                PlaceWall(j, i, 0.0f);
             }
         }
     }
@@ -234,29 +234,29 @@ void AMazeGenerator::BuildGeometry(FCell** Cells)
     {
         if (i != Exit.X || Exit.Y != Height)
         {
-            PlaceWall(CellSize * Height, CellSize * i, 0.0f);
+            PlaceWall(Height, i, 0.0f);
         }
-        PlaceColumn(CellSize * Height, CellSize * i);
+        PlaceColumn(Height, i);
     }
     for (uint8 j = 0; j < Height; j++)
     {
         if (j != Exit.Y || Exit.X != Width)
         {
-            PlaceWall(CellSize * j, CellSize * Width, -90.0f);
+            PlaceWall(j, Width, -90.0f);
         }
-        PlaceColumn(CellSize * j, CellSize * Width);
+        PlaceColumn(j, Width);
     }
-    PlaceColumn(CellSize * Height, CellSize * Width);
+    PlaceColumn(Height, Width);
 }
 
 void AMazeGenerator::PlaceColumn(const float X, const float Y)
 {
-    ColumnComponent->AddInstance(FTransform(FVector(X, Y, 5.0f)));
+    ColumnComponent->AddInstance(FTransform(FVector(CellSize * X, CellSize * Y, 5.0f)));
 }
 
 void AMazeGenerator::PlaceFloor(const float X, const float Y)
 {
-    FloorComponent->AddInstance(FTransform(FVector(X, Y, 0.0f)));
+    FloorComponent->AddInstance(FTransform(FVector(CellSize * X, CellSize * Y, 0.0f)));
 }
 
 void AMazeGenerator::AddPoint(const uint8 X, const uint8 Y)
@@ -267,7 +267,7 @@ void AMazeGenerator::AddPoint(const uint8 X, const uint8 Y)
 
 void AMazeGenerator::PlaceWall(const float X, const float Y, const float R)
 {
-    WallComponent->AddInstance(FTransform(FRotator(0.0f, R, 0.0f), FVector(X, Y, 5.0f)));
+    WallComponent->AddInstance(FTransform(FRotator(0.0f, R, 0.0f), FVector(CellSize * X, CellSize * Y, 5.0f)));
 }
 
 void AMazeGenerator::FindPath(FCell** Cells)

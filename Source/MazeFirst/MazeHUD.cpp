@@ -7,7 +7,8 @@
 void AMazeHUD::BeginPlay()
 {
     Super::BeginPlay();
-    if (const auto World = GetWorld(); const auto GameMode = Cast<AMazeFirstGameModeBase>(World->GetAuthGameMode()))
+    if (!GetWorld()) return;
+    if (const auto GameMode = Cast<AMazeFirstGameModeBase>(GetWorld()->GetAuthGameMode()))
     {
         GameMode->SetPause.AddUObject(this, &AMazeHUD::OnSetPause);
     }

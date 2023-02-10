@@ -10,6 +10,8 @@ public class MazeFirst : ModuleRules
 		PublicDependencyModuleNames.AddRange(new[]
 			{ "Core", "CoreUObject", "Engine", "InputCore", "Niagara", "EnhancedInput", "UMG" });
 		PrivateDependencyModuleNames.AddRange(new string[] { });
+		
+		PublicIncludePaths.Add("MazeFirst");
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

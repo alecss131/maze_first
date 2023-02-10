@@ -28,6 +28,7 @@ void AMazeRunnerController::BeginPlay()
     {
         Subsystem->AddMappingContext(MappingContext, 1);
     }
+    OnSetPause(false);
 }
 
 void AMazeRunnerController::PauseGame()

@@ -14,8 +14,6 @@ class MAZEFIRST_API UMazePauseWidget : public UUserWidget
     GENERATED_BODY()
 
 protected:
-    virtual void NativeConstruct() override;
-
     UPROPERTY(meta = (BindWidget))
     UButton* ResumeButton;
 
@@ -27,7 +25,8 @@ protected:
 
     UPROPERTY(meta = (BindWidget))
     UButton* NewMazeButton;
-
+    
+    virtual void NativeConstruct() override;
 private:
     UFUNCTION()
     void ResumeGame();
