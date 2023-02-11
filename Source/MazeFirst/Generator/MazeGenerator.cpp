@@ -58,6 +58,8 @@ void AMazeGenerator::BeginPlay()
     GenerateMaze();
     check(Path);
     Path->SetActorParameter(SplineName, this);
+    //Path->SetIntParameter("spawn_rate", 10);
+    //Path->SetIntParameter("lifetime", 50);
 }
 
 void AMazeGenerator::GenerateMaze()
