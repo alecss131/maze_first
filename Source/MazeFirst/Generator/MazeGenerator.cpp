@@ -8,16 +8,6 @@
 #include "NiagaraComponent.h"
 #include "Kismet/GameplayStatics.h"
 
-struct FCell
-{
-    uint8 X;
-    uint8 Y;
-    uint32 Distance = 0;
-    bool bHasLeft = true;
-    bool bHasBottom = true;
-    bool bIsVisited = false;
-};
-
 AMazeGenerator::AMazeGenerator()
 {
     PrimaryActorTick.bCanEverTick = false;
@@ -25,20 +15,20 @@ AMazeGenerator::AMazeGenerator()
     SceneComponent->SetMobility(EComponentMobility::Static);
     SetRootComponent(SceneComponent);
     WallComponent = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("WallComponent"));
-    WallComponent->SetupAttachment(RootComponent);
+    WallComponent->SetupAttachment(SceneComponent);
     FloorComponent = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("FloorComponent"));
-    FloorComponent->SetupAttachment(RootComponent);
+    FloorComponent->SetupAttachment(SceneComponent);
     ColumnComponent = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("ColumnComponent"));
-    ColumnComponent->SetupAttachment(RootComponent);
+    ColumnComponent->SetupAttachment(SceneComponent);
     StartComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StartComponent"));
-    StartComponent->SetupAttachment(RootComponent);
+    StartComponent->SetupAttachment(SceneComponent);
     StartComponent->SetRelativeLocation(FVector(-CellSize, 0.0f, 0.0f));
     EndComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("EndComponent"));
-    EndComponent->SetupAttachment(RootComponent);
+    EndComponent->SetupAttachment(SceneComponent);
     SplineComponent = CreateDefaultSubobject<USplineComponent>(TEXT("SplineComponent"));
-    SplineComponent->SetupAttachment(RootComponent);
+    SplineComponent->SetupAttachment(SceneComponent);
     Path = CreateDefaultSubobject<UNiagaraComponent>(TEXT("PathEffect"));
-    Path->SetupAttachment(RootComponent);
+    Path->SetupAttachment(SceneComponent);
 }
 
 void AMazeGenerator::BeginPlay()
@@ -65,27 +55,23 @@ void AMazeGenerator::BeginPlay()
 void AMazeGenerator::GenerateMaze()
 {
     ResetMaze();
-    FCell** Cells = new FCell*[Width];
+    TArray<FCell> In;
+    In.Init({FCell()}, Height);
+    Cells.Init({In}, Width);
     for (uint8 i = 0; i < Width; i++)
     {
-        Cells[i] = new FCell[Height];
         for (uint8 j = 0; j < Height; j++)
         {
             Cells[i][j] = {i, j};
         }
     }
-    RemoveWallsWithBackTracker(Cells);
-    PlaceExit(Cells);
-    BuildGeometry(Cells);
-    FindPath(Cells);
-    for (uint8 i = 0; i < Width; i++)
-    {
-        delete [] Cells[i];
-    }
-    delete [] Cells;
+    RemoveWallsWithBackTracker();
+    PlaceExit();
+    BuildGeometry();
+    FindPath();
 }
 
-void AMazeGenerator::RemoveWallsWithBackTracker(FCell** Cells)
+void AMazeGenerator::RemoveWallsWithBackTracker()
 {
     FCell* Current = &Cells[0][0];
     Current->bIsVisited = true;
@@ -114,7 +100,7 @@ void AMazeGenerator::RemoveWallsWithBackTracker(FCell** Cells)
         if (UnvisitedNeighbours.Num() > 0)
         {
             FCell* Chosen = UnvisitedNeighbours[FMath::RandRange(0, UnvisitedNeighbours.Num() - 1)];
-            RemoveWall(Current, Chosen);
+            RemoveWall(*Current, *Chosen);
             Chosen->bIsVisited = true;
             Stack.Push(Chosen);
             Chosen->Distance = Current->Distance + 1;
@@ -127,33 +113,33 @@ void AMazeGenerator::RemoveWallsWithBackTracker(FCell** Cells)
     } while (Stack.Num() > 0);
 }
 
-void AMazeGenerator::RemoveWall(FCell* A, FCell* B)
+void AMazeGenerator::RemoveWall(FCell &A, FCell &B)
 {
-    if (A->X == B->X)
+    if (A.X == B.X)
     {
-        if (A->Y > B->Y)
+        if (A.Y > B.Y)
         {
-            A->bHasBottom = false;
+            A.bHasBottom = false;
         }
         else
         {
-            B->bHasBottom = false;
+            B.bHasBottom = false;
         }
     }
     else
     {
-        if (A->X > B->X)
+        if (A.X > B.X)
         {
-            A->bHasLeft = false;
+            A.bHasLeft = false;
         }
         else
         {
-            B->bHasLeft = false;
+            B.bHasLeft = false;
         }
     }
 }
 
-void AMazeGenerator::PlaceExit(FCell** Cells)
+void AMazeGenerator::PlaceExit()
 {
     Cells[0][0].bHasBottom = false; //open start
     FCell* Furthest = &Cells[0][0];
@@ -214,7 +200,7 @@ void AMazeGenerator::PlaceExit(FCell** Cells)
     Exit = FIntVector(X, Y, 0);
 }
 
-void AMazeGenerator::BuildGeometry(FCell** Cells)
+void AMazeGenerator::BuildGeometry()
 {
     for (uint8 i = 0; i < Width; i++)
     {
@@ -272,7 +258,7 @@ void AMazeGenerator::PlaceWall(const float X, const float Y, const float R)
     WallComponent->AddInstance(FTransform(FRotator(0.0f, R, 0.0f), FVector(CellSize * X, CellSize * Y, 5.0f)));
 }
 
-void AMazeGenerator::FindPath(FCell** Cells)
+void AMazeGenerator::FindPath()
 {
     FIntVector Current = End;
     AddPoint(Current.X, Current.Y);
@@ -314,10 +300,12 @@ void AMazeGenerator::SetShowPath(bool bShow)
 void AMazeGenerator::ResetMaze()
 {
     HidePath();
+    Cells.Empty();
     WallComponent->ClearInstances();
     FloorComponent->ClearInstances();
     ColumnComponent->ClearInstances();
     SplineComponent->ClearSplinePoints();
+    EndComponent->SetRelativeLocation(FVector::Zero());
 }
 
 void AMazeGenerator::ShowPath()

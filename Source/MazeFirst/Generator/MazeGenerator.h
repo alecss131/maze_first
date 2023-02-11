@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/SplineComponent.h"
 #include "GameFramework/Actor.h"
+#include "Cell.h"
 #include "MazeGenerator.generated.h"
 
 class USceneComponent;
@@ -12,7 +13,6 @@ class UInstancedStaticMeshComponent;
 class UStaticMeshComponent;
 class USplineComponent;
 class UNiagaraComponent;
-struct FCell;
 
 UCLASS()
 class MAZEFIRST_API AMazeGenerator : public AActor
@@ -65,15 +65,15 @@ protected:
     virtual void BeginPlay() override;
 
 private :
-    void RemoveWallsWithBackTracker(FCell** Cells);
-    void RemoveWall(FCell* A, FCell* B);
-    void PlaceExit(FCell** Cells);
-    void BuildGeometry(FCell** Cells);
+    void RemoveWallsWithBackTracker();
+    void RemoveWall(FCell &A, FCell &B);
+    void PlaceExit();
+    void BuildGeometry();
     void PlaceColumn(const float X, const float Y);
     void PlaceFloor(const float X, const float Y);
     void AddPoint(const uint8 X, const uint8 Y);
     void PlaceWall(const float X, const float Y, const float R);
-    void FindPath(FCell** Cells);
+    void FindPath();
     void SetShowPath(bool bShow);
     void ResetMaze();
 
@@ -85,4 +85,5 @@ private :
 
     FIntVector End;
     FIntVector Exit;
+    TArray<TArray<FCell>> Cells;
 };
