@@ -1,9 +1,9 @@
 // Copyright Alexey Morozov. All Rights Reserved.
 
 #include "MazeFirstGameModeBase.h"
-#include "MazeRunner.h"
-#include "MazeHUD.h"
-#include "MazeRunnerController.h"
+#include "Player/MazeRunner.h"
+#include "UI/MazeHUD.h"
+#include "Player/MazeRunnerController.h"
 
 AMazeFirstGameModeBase::AMazeFirstGameModeBase()
 {

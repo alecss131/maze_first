@@ -7,6 +7,7 @@
 #include "MazeHUD.generated.h"
 
 class UUserWidget;
+class UMazePauseWidget;
 
 UCLASS()
 class MAZEFIRST_API AMazeHUD : public AHUD
@@ -17,14 +18,14 @@ protected:
     virtual void BeginPlay() override;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = UI)
-    TSubclassOf<UUserWidget> PauseWidgetClass;
+    TSubclassOf<UMazePauseWidget> PauseWidgetClass;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = UI)
     TSubclassOf<UUserWidget> HudWidgetClass;
 
 private:
     UPROPERTY()
-    UUserWidget* PauseWidget;
+    UMazePauseWidget* PauseWidget;
 
     UPROPERTY()
     UUserWidget* HudWidget;

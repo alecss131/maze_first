@@ -1,4 +1,4 @@
-# Maze Firts Unreal Project
+# Maze First Unreal Project
 
 Procedural generated maze game
 

@@ -3,6 +3,7 @@
 #include "MazeHUD.h"
 #include "MazeFirstGameModeBase.h"
 #include "Blueprint/UserWidget.h"
+#include "MazePauseWidget.h"
 
 void AMazeHUD::BeginPlay()
 {
@@ -14,7 +15,7 @@ void AMazeHUD::BeginPlay()
     }
     if (PauseWidgetClass)
     {
-        PauseWidget = CreateWidget<UUserWidget>(GetWorld(), PauseWidgetClass);
+        PauseWidget = CreateWidget<UMazePauseWidget>(GetWorld(), PauseWidgetClass);
         if (PauseWidget)
         {
             PauseWidget->AddToViewport();
