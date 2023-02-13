@@ -17,6 +17,15 @@ class MAZEFIRST_API AMazeRunner : public ACharacter
 {
     GENERATED_BODY()
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = true))
+    UInputMappingContext* MappingContext;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = true))
+    UInputAction* MoveAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = true))
+    UInputAction* LookAction;
+
 public:
     AMazeRunner();
     virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
@@ -28,14 +37,4 @@ private:
 
     void Move(const FInputActionValue& Value);
     void Look(const FInputActionValue& Value);
-
-protected:
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-    UInputMappingContext* MappingContext;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-    UInputAction* MoveAction;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-    UInputAction* LookAction;
 };

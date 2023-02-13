@@ -15,20 +15,20 @@ class MAZEFIRST_API AMazeRunnerController : public APlayerController
 {
     GENERATED_BODY()
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = true))
+    UInputMappingContext* MappingContext;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = true))
+    UInputAction* PauseAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = true))
+    UInputAction* HelpAction;
+
 protected:
     virtual void SetupInputComponent() override;
 
 public:
     virtual void BeginPlay() override;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-    UInputMappingContext* MappingContext;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-    UInputAction* PauseAction;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-    UInputAction* HelpAction;
 
 private:
     void PauseGame();
